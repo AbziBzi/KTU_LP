@@ -1,0 +1,62 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/abzibzi/MyProjects/MyC#P/LP_LAB1a/LP_LAB1a.csproj": {}
+  },
+  "projects": {
+    "/home/abzibzi/MyProjects/MyC#P/LP_LAB1a/LP_LAB1a.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/abzibzi/MyProjects/MyC#P/LP_LAB1a/LP_LAB1a.csproj",
+        "projectName": "LP_LAB1a",
+        "projectPath": "/home/abzibzi/MyProjects/MyC#P/LP_LAB1a/LP_LAB1a.csproj",
+        "packagesPath": "/home/abzibzi/.nuget/packages/",
+        "outputPath": "/home/abzibzi/MyProjects/MyC#P/LP_LAB1a/obj/",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "/usr/share/dotnet/sdk/NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "/home/abzibzi/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp2.2"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp2.2": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp2.2": {
+          "dependencies": {
+            "Microsoft.NETCore.App": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.2.0, )",
+              "autoReferenced": true
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[12.0.2, )"
+            }
+          },
+          "imports": [
+            "net461"
+          ],
+          "assetTargetFallback": true,
+          "warn": true
+        }
+      }
+    }
+  }
+}

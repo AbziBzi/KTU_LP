@@ -1,0 +1,11 @@
+/home/abzibzi/MyProjects/MyC#P/LP_LAB1a/bin/Debug/netcoreapp2.2/LP_LAB1a.deps.json
+/home/abzibzi/MyProjects/MyC#P/LP_LAB1a/bin/Debug/netcoreapp2.2/LP_LAB1a.runtimeconfig.json
+/home/abzibzi/MyProjects/MyC#P/LP_LAB1a/bin/Debug/netcoreapp2.2/LP_LAB1a.runtimeconfig.dev.json
+/home/abzibzi/MyProjects/MyC#P/LP_LAB1a/bin/Debug/netcoreapp2.2/LP_LAB1a.dll
+/home/abzibzi/MyProjects/MyC#P/LP_LAB1a/bin/Debug/netcoreapp2.2/LP_LAB1a.pdb
+/home/abzibzi/MyProjects/MyC#P/LP_LAB1a/obj/Debug/netcoreapp2.2/LP_LAB1a.csprojAssemblyReference.cache
+/home/abzibzi/MyProjects/MyC#P/LP_LAB1a/obj/Debug/netcoreapp2.2/LP_LAB1a.csproj.CoreCompileInputs.cache
+/home/abzibzi/MyProjects/MyC#P/LP_LAB1a/obj/Debug/netcoreapp2.2/LP_LAB1a.AssemblyInfoInputs.cache
+/home/abzibzi/MyProjects/MyC#P/LP_LAB1a/obj/Debug/netcoreapp2.2/LP_LAB1a.AssemblyInfo.cs
+/home/abzibzi/MyProjects/MyC#P/LP_LAB1a/obj/Debug/netcoreapp2.2/LP_LAB1a.dll
+/home/abzibzi/MyProjects/MyC#P/LP_LAB1a/obj/Debug/netcoreapp2.2/LP_LAB1a.pdb

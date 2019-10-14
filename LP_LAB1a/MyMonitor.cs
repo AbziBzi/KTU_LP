@@ -18,15 +18,14 @@ namespace LP_LAB1a
 
         public void AddItem(Tree item)
         {
-            lock(myLock)
+            lock (myLock)
             {
-                while(this.count == data.Length)
+                while (this.count == data.Length)
                 {
                     Monitor.Wait(myLock);
                 }
                 int index = FindIndex(item);
-
-                if(data[index] != null)
+                if (data[index] != null)
                 {
                     ShiftElement(index);
                 }
@@ -40,12 +39,12 @@ namespace LP_LAB1a
         {
             int index = 0;
 
-            for(int i = 0 ; i < data.Length; i++)
+            for (int i = 0; i < data.Length; i++)
             {
-                if(data[i] == null)
+                if (data[i] == null)
                     break;
-                if(data[i].CompareTo(item) <= 0)
-                    index = i +1;
+                if (data[i].CompareTo(item) <= 0)
+                    index = i + 1;
                 else
                     break;
             }
@@ -54,9 +53,9 @@ namespace LP_LAB1a
 
         private void ShiftElement(int index)
         {
-            for(int i = data.Length -1; i > index; i--)
+            for (int i = data.Length - 1; i > index; i--)
             {
-                data[i] = data[i -1];
+                data[i] = data[i - 1];
             }
             data[index] = null;
         }
@@ -65,13 +64,16 @@ namespace LP_LAB1a
         {
             lock (myLock)
             {
-                while(count == 0)
+                while (count == 0)
                 {
                     if (stillWorking)
                         Monitor.Wait(myLock);
 
                     else if (count == 0)
+                    {
+                        Monitor.PulseAll(myLock);
                         return null;
+                    }
 
                 }
                 Tree item = data[count - 1];
@@ -86,7 +88,7 @@ namespace LP_LAB1a
         {
             lock (myLock)
             {
-                if(index < 0 || index > data.Length)
+                if (index < 0 || index > data.Length)
                     throw new ArgumentException("invalid index in Monitor.GetTree(int index)");
                 return data[index];
             }
@@ -94,7 +96,7 @@ namespace LP_LAB1a
 
         public int GetCount()
         {
-            return count;
+            return this.count;
         }
 
         public void SetStillWorking(bool isWorking)

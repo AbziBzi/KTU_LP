@@ -5,7 +5,7 @@ namespace LP_LAB1a
         public string Type { get; private set; }
         public int Age { get; private set; }
         public double Height { get; private set; }
-        public long result;
+        public long result { get; set; }
 
         public Tree(string type, int age, double height)
         {
@@ -16,7 +16,7 @@ namespace LP_LAB1a
 
         private long FindPrimeNumber()
         {
-            int n = (int)(this.Height * this.Age * this.Type.Length);
+            int n = (int)(this.Height * this.Age * this.Type.Length * 0.5);
             int count = 0;
             long a = 2;
             while (count < n)
@@ -38,7 +38,6 @@ namespace LP_LAB1a
                 }
                 a++;
             }
-            this.result = (--a);
             return (--a);
         }
 
@@ -53,7 +52,7 @@ namespace LP_LAB1a
 
         public long ReturnResult()
         {
-            return result;
+            return FindPrimeNumber();
         }
     }
 }

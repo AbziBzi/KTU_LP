@@ -64,7 +64,6 @@ func Execute(chanel <-chan Tree, chanel2 chan<- Tree) {
 		if value <= FilterValue {
 			tree.Result = value
 			chanel2 <- tree
-			wg.Add(1)
 		}
 	}
 }

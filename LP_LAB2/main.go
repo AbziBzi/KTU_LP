@@ -35,20 +35,21 @@ func main() {
 
 	// return all trees from chanel
 	for i := 0; i < ThreadsCount; i++{
+		wg.Add(1)
 		go Execute(worker, receive)
 	}
 
+	wg.Add(1)
 	// result printing function
 	go func(chanel <-chan Tree) {
 		for element := range chanel{
 			resultTrees = append(resultTrees, element)
-			wg.Done()
 		}
+		wg.Done()
 	}(receive)
 
 	// Add trees to chanel
 	for _, tree := range trees{
-		wg.Add(1)
 		worker <- tree
 	}
 	wg.Wait()
@@ -56,8 +57,8 @@ func main() {
 }
 
 func Execute(chanel <-chan Tree, chanel2 chan<- Tree) {
+	defer wg.Done()
 	for element := range chanel {
-		wg.Done()
 		tree := element
 		var value = FindPrimeNumber(tree)
 		if value <= FilterValue {

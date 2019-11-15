@@ -21,7 +21,7 @@ func main() {
 
 	// One process receive data from sender and sends it to result chanel
 	// after filter given numbers
-	go receiver(sender, resultFirst, resultSecond, &wg, isFinished)
+	go receiver(sender, resultFirst, resultSecond, isFinished)
 
 	wg.Add(2)
 	go printResults(resultFirst, &wg)
@@ -33,21 +33,22 @@ func main() {
 
 func sendNumber(from int, sender chan<- int, isFinished chan bool) {
 	for i := from; ; i++ {
+		var message = "sended number: "
 		select {
 		case <-isFinished:
 			return
-		default:
-			sender <- i
+		case sender <- i:
+			fmt.Println(message, i)
 		}
 	}
 }
 
-func receiver(sender <-chan int, resultFirst chan<- int, resultSecond chan<- int, wg *sync.WaitGroup, isFinished chan bool) {
+func receiver(sender <-chan int, resultFirst chan<- int, resultSecond chan<- int, isFinished chan bool) {
 	defer close(resultFirst)
 	defer close(resultSecond)
 	var count = 0
 	for {
-		if count < 20 {
+		if count < 10 {
 			select {
 			case i := <-sender:
 				if i%2 == 0 {

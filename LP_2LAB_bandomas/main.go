@@ -6,19 +6,21 @@ import (
 )
 
 func main() {
-	fmt.Println("Lygiagretaus programavimo 2 laboratorinio darbo bandomasis kolis")
-
 	var wg sync.WaitGroup
 
-	// making all chanels
+	// creating channels that sends data of type int
 	sender := make(chan int)
 	resultFirst := make(chan int)
 	resultSecond := make(chan int)
-	isFinished := make(chan bool, 2)
+	// creating signal channel that will say to end infinitive loop in sendNumber func
+	isFinished := make(chan bool)
 
+	// Two processes sends data by sender channel
 	go sendNumber(0, sender, isFinished)
 	go sendNumber(11, sender, isFinished)
 
+	// One process receive data from sender and sends it to result chanel
+	// after filter given numbers
 	go receiver(sender, resultFirst, resultSecond, &wg, isFinished)
 
 	wg.Add(2)
@@ -56,7 +58,6 @@ func receiver(sender <-chan int, resultFirst chan<- int, resultSecond chan<- int
 			}
 			count++
 		} else {
-			isFinished <- true
 			isFinished <- true
 			return
 		}

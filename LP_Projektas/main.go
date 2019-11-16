@@ -6,7 +6,7 @@ import (
 	"math/rand"
 )
 
-var a = 5 // a is max cost of one length by two coordinates
+var a float64 = 5 // a is max cost of one length by two coordinates
 
 // MIN is minimum value of x or y
 var MIN = -10
@@ -20,18 +20,30 @@ var COUNT = 100
 func main() {
 	fmt.Println("Start")
 
-	var points = fillWithRandomPoints()
-	fmt.Println(points)
+	// var points = fillWithRandomPoints()
+	// fmt.Println(points)
+
+	var points = [][]int{{0, 0}, {1, 1}, {1, 2}, {2, 2}}
+	var cost = costFunction(points)
+	fmt.Println(cost)
 }
 
 // C(l)= SUM((l-a)^2)
 func costFunction(points [][]int) float64 {
-	var result float64 = 0
+	var cost float64 = 0
 
-	return result
+	for i, point := range points {
+		for _, pointNext := range points[i+1:] {
+			var length = countLength(point, pointNext)
+			var temp = length - a
+			cost = math.Pow(temp, 2)
+		}
+	}
+
+	return cost
 }
 
-// Count length by two pints in 2d dimension
+// Counts length by two pints in 2d dimension
 func countLength(x1 []int, x2 []int) float64 {
 	var xDif = x1[0] - x2[0]
 	var yDif = x1[1] - x2[1]
@@ -42,6 +54,7 @@ func countLength(x1 []int, x2 []int) float64 {
 	return length
 }
 
+// Creates 2d slice with random points
 func fillWithRandomPoints() [][]int {
 	var primaryPoint = []int{0, 0}
 	points := make([][]int, COUNT)

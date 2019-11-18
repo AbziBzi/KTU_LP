@@ -1,0 +1,17 @@
+
+Project:
+  ✔ global const MAX_ITERATION_COUNT @done(19-11-17 21:24)
+  findLowerCost:
+    ✔ count iterations @done(19-11-17 21:24)
+    ✔ while < max_iterations start loop @done(19-11-17 21:24)
+    ☐ count all points gradient
+    ☐ count new koordinates with counted earlier gradient
+    ☐ count function value
+    ☐ if value less -> go to next iteration
+    ☐ if value bigger -> lower *h* and go to next iteration
+
+    countGradient:
+      ✔ count cost function with given points @done(19-11-18 18:27)
+      ✔ to given point add `h` @done(19-11-18 18:27)
+      ✔ make calculations @done(19-11-18 18:27)
+      ✔ return value @done(19-11-18 18:27)

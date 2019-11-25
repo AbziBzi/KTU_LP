@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"math"
 	"math/rand"
+	"time"
 )
 
-var a float64 = 2 // a is max cost of one length by two coordinates
+var a float64 = 1e-3 // a is max cost of one length by two coordinates
 
 // Alpha is alpha
 var Alpha float64 = 0.01
@@ -18,10 +19,10 @@ var Min = -10
 var Max = 10
 
 // Count is count of points
-var Count = 100
+var Count = 50
 
 // MaxIterationCount is a condition to stop counting
-var MaxIterationCount = 100
+var MaxIterationCount = 10000000
 
 func main() {
 	fmt.Println("Start")
@@ -33,9 +34,10 @@ func main() {
 func findLowerCost(points [][]float64, alpha float64) {
 	var iterationsCount = 0
 	var result float64
-	fmt.Println(costFunction(points))
+	fmt.Println("\nPradine kaina:\n", costFunction(points))
 
-	for iterationsCount < MaxIterationCount {
+	// mazint zingsny
+	for iterationsCount < MaxIterationCount && alpha > 1e-10 {
 		iterationsCount++
 		fValue := costFunction(points)
 		count := 0
@@ -56,7 +58,9 @@ func findLowerCost(points [][]float64, alpha float64) {
 			alpha = alpha / 2
 		}
 	}
-	fmt.Println(result)
+	fmt.Println("\nIteraciju skaicius: ", iterationsCount)
+	fmt.Println("\nGalutinė kaina: \n", result)
+	fmt.Println("\nGauti taskai:\n", points)
 }
 
 // Function that normalize vector of gradients
@@ -72,7 +76,7 @@ func countGradient(points [][]float64) []float64 {
 	var gradients []float64
 	for i, point := range points {
 		for j := range point {
-			gradient := countPointGradient(i, j, 2, points)
+			gradient := countPointGradient(i, j, 1e-6, points)
 			gradients = append(gradients, gradient)
 		}
 	}
@@ -147,8 +151,8 @@ func fillWithRandomPoints(min, max, count int) [][]float64 {
 	points := make([][]float64, count)
 
 	for i := range points {
-		// rand.Seed(time.Now().UTC().UnixNano())
-		rand.Seed(1)
+		rand.Seed(time.Now().UTC().UnixNano())
+		// rand.Seed(1)
 		if i == 0 {
 			points[i] = primaryPoint
 			continue
@@ -157,7 +161,7 @@ func fillWithRandomPoints(min, max, count int) [][]float64 {
 		var y = rand.Intn(max-min) + min
 		var row = []float64{float64(x), float64(y)}
 		points[i] = row
-
 	}
+	fmt.Println("\nPradiniai taskai:\n", points)
 	return points
 }

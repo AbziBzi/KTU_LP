@@ -4,13 +4,20 @@ import (
 	"fmt"
 	"math"
 	"math/rand"
+	"sync"
 	"time"
 )
+
+var c int64 = 1
 
 var a float64 = 1e-3 // a is max cost of one length by two coordinates
 
 // Alpha is alpha
 var Alpha float64 = 0.01
+
+var threadsCounts = []int{1, 5, 10, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100, 150, 200}
+
+var h float64 = 1e-10
 
 // Min is minimum value of x or y
 var Min = -10
@@ -18,35 +25,59 @@ var Min = -10
 // Max is maximum value of x or y
 var Max = 10
 
-// Count is count of points
-var Count = 50
+// Counts is count of points
+var Counts = []int{5, 10, 15, 20, 25, 30, 35, 40, 45, 50}
 
 // MaxIterationCount is a condition to stop counting
-var MaxIterationCount = 10000000
+var MaxIterationCount = 10000
+
+var grad = make([]float64, 1000)
 
 func main() {
-	fmt.Println("Start")
 
-	var points = fillWithRandomPoints(Min, Max, Count)
-	findLowerCost(points, Alpha)
+	// Fro whole program run
+	// for _, count := range Counts {
+	// 	var points = fillWithRandomPoints(Min, Max, count)
+	// 	fmt.Println("Points Count:\t", count)
+
+	// 	for _, threadsCount := range threadsCounts {
+	// 		fmt.Print(" |", threadsCount, "\t|")
+	// 		start := time.Now()
+
+	// 		findLowerCost(threadsCount, points, Alpha)
+
+	// 		elapsed := time.Since(start)
+	// 		fmt.Println(elapsed, "\t|")
+	// 	}
+	// 	fmt.Println()
+	// }
+
+	// For one part of program run
+	points := fillWithRandomPoints(Min, Max, Counts[3])
+	fmt.Println("Points Count:\t", Counts[3])
+	start := time.Now()
+	findLowerCost(threadsCounts[4], points, Alpha)
+	elapsed := time.Since(start)
+	fmt.Println(elapsed, "\t|")
+
 }
 
-func findLowerCost(points [][]float64, alpha float64) {
+func findLowerCost(threadsCount int, points [][]float64, alpha float64) {
 	var iterationsCount = 0
 	var result float64
-	fmt.Println("\nPradine kaina:\n", costFunction(points))
+	fmt.Print(costFunction(points), "\t|")
 
 	// mazint zingsny
-	for iterationsCount < MaxIterationCount && alpha > 1e-10 {
+	for iterationsCount < MaxIterationCount && alpha > 1e-5 {
 		iterationsCount++
 		fValue := costFunction(points)
 		count := 0
-		gradientsVector := countGradient(points)
-		normalizeGradientVector(gradientsVector)
+		executeGradient(threadsCount, points)
+		normalizeGradientVector(grad)
 		pointsCopy := makeCopy(points)
 		for i, point := range pointsCopy {
 			for j, xy := range point {
-				pointsCopy[i][j] = float64(xy) - (alpha * gradientsVector[count])
+				pointsCopy[i][j] = float64(xy) - (alpha * grad[count])
 				count++
 			}
 		}
@@ -58,9 +89,8 @@ func findLowerCost(points [][]float64, alpha float64) {
 			alpha = alpha / 2
 		}
 	}
-	fmt.Println("\nIteraciju skaicius: ", iterationsCount)
-	fmt.Println("\nGalutinė kaina: \n", result)
-	fmt.Println("\nGauti taskai:\n", points)
+	fmt.Print(result, "\t|")
+	fmt.Print(iterationsCount, "\t|")
 }
 
 // Function that normalize vector of gradients
@@ -71,26 +101,41 @@ func normalizeGradientVector(vector []float64) {
 	}
 }
 
-// Creates slice of counted points gradient
-func countGradient(points [][]float64) []float64 {
-	var gradients []float64
+func executeGradient(threadsCount int, points [][]float64) {
+	wg := sync.WaitGroup{}
+
+	var index int = 0
+
+	// create channels
+	send := make(chan []int)
+
+	wg.Add(threadsCount)
+	for i := 0; i < threadsCount; i++ {
+		go countPointGradient(points, send, &wg)
+	}
+
 	for i, point := range points {
 		for j := range point {
-			gradient := countPointGradient(i, j, 1e-6, points)
-			gradients = append(gradients, gradient)
+			send <- []int{index, i, j}
+			index++
 		}
 	}
-	return gradients
+	close(send)
+	wg.Wait()
 }
 
-// Counts point x or y gradient - where function grows faster
-func countPointGradient(xIndex, yIndex int, h float64, points [][]float64) float64 {
-	var pointsCopy = makeCopy(points)
+func countPointGradient(points [][]float64, pointsChanel <-chan []int, wg *sync.WaitGroup) {
+	defer wg.Done()
 
-	pointsCopy[xIndex][yIndex] += h
-	var gradient = (costFunction(pointsCopy) - costFunction(points)) / float64(h)
-
-	return gradient
+	for xy := range pointsChanel {
+		if xy != nil && xy[0] < 2 {
+			grad[xy[0]] = 0
+		} else if xy != nil {
+			var pointsCopy = makeCopy(points)
+			pointsCopy[xy[1]][xy[2]] += h
+			grad[xy[0]] = (costFunction(pointsCopy) - costFunction(points)) / float64(h)
+		}
+	}
 }
 
 // Counts length of vector with n elements
@@ -149,10 +194,10 @@ func countLength(x1 []float64, x2 []float64) float64 {
 func fillWithRandomPoints(min, max, count int) [][]float64 {
 	var primaryPoint = []float64{0, 0}
 	points := make([][]float64, count)
-
 	for i := range points {
-		rand.Seed(time.Now().UTC().UnixNano())
-		// rand.Seed(1)
+		// rand.Seed(time.Now().UTC().UnixNano())
+		rand.Seed(c)
+		c++
 		if i == 0 {
 			points[i] = primaryPoint
 			continue
@@ -162,6 +207,5 @@ func fillWithRandomPoints(min, max, count int) [][]float64 {
 		var row = []float64{float64(x), float64(y)}
 		points[i] = row
 	}
-	fmt.Println("\nPradiniai taskai:\n", points)
 	return points
 }
